@@ -1,12 +1,14 @@
 # CNN-Based ADC Linearizer
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/deijany/CNN_linearizer/blob/main/main_nnlinearizer.ipynb)
+
 This repository contains a CNN-based linearizer for ADC nonlinearity correction, developed in 2022 during my PhD.
 
 The target application is real-time signal processing. Hardware constraints on FPGAs and ASICs make every additional layer, neuron, or connection costly in latency and power, so minimizing complexity is a first-class design requirement, not an afterthought.
 
 Inspired by Hammerstein and Wiener structures and by how neural networks parametrize nonlinear functions, I designed a parallel architecture of low-complexity nonlinear branches: each branch applies a cheap activation function, such as ReLU, absolute value, or 1-bit quantization (sign), followed by an FIR filter, and one linear FIR branch handles any residual linear distortion. The branches are summed to produce the linearized estimate.
 
-Working on the CNN-based training of this structure led to developing a better approach: decomposing the problem into a set of subconvex sub-problems, each solvable analytically by matrix inversion. No gradient descent is required. That approach converges faster, is more interpretable, and achieves higher SNDR. It was published in 2025.
+Working on the CNN-based training of this structure led to developing a better approach: decomposing the problem into a set of subconvex sub-problems, each solvable analytically by matrix inversion. Nonconvex optimization is avoided. That approach converges faster, is more interpretable, and achieves higher SNDR. It was published in 2025.
 
 
 ## Published Paper
@@ -26,7 +28,8 @@ CNN_linearizer/
 |-- proposed_linearizer_in_IEEA_access2025.py  Matrix-inversion linearizer (paper)
 |-- hammerstein_linearizer.py            Hammerstein baseline (polynomial branches)
 |-- requirements.txt
-|-- datasets/                            Input data (not tracked in git)
+|-- datasets/                            Input data (small dataset): frequency dependent signals (distortion order 2) and 9 nonlinear terms (degree 9)
+|-- datasets/nonlinear_coeff.h5 (.txt)   Coefficients used to generate the dataset      
 |-- trained_model/                       Saved model outputs
 |
 |-- myclasses/
@@ -52,8 +55,8 @@ An ideal ADC maps an analog voltage to a digital code linearly. Real ADCs deviat
 
 The paper treats two cases:
 
-- Digital-domain model: the nonlinearity acts on the already-sampled signal. Distortion products stay within the Nyquist band and no interpolation is needed. This is the case implemented in this repository.
-- Analog-domain model: the nonlinearity acts on the analog waveform before sampling. Harmonics and intermodulation products are not bandlimited; a complete linearizer must upsample, process at a higher rate, and then downsample. This case is covered in the paper but not included in this sample project.
+- Digital-domain model: the nonlinearity acts on the already-sampled signal. Distortion products stay within the Nyquist band. This is the case implemented in this repository.
+- Analog-domain model: the nonlinearity acts on the analog waveform before sampling. Harmonics and intermodulation products are not bandlimited; a complete linearizer must therefore upsample (together with interpolation filter), process at a higher rate, and then downsample. This case is covered in the paper but not included in this sample project.
 
 ### Why cheap activation functions
 
@@ -80,11 +83,11 @@ The notebook is also compatible with Google Colab.
 
 ```bibtex
 @article{rodriguez2025lowcomplexity,
-  title   = {Low-Complexity Frequency-Dependent Linearizers Based on
-             Parallel Bias-Modulus and Bias-ReLU Operations},
-  author  = {Rodr{\'i}guez Linares, Deijany and others},
+  title   = {Low-Complexity Frequency-Dependent Linearizers Based on Parallel Bias-Modulus and Bias-ReLU Operations},
+  author  = {Rodr{\'i}guez Linares, Deijany and Johansson, H{\aa}kan},
   journal = {IEEE Access},
   year    = {2025},
+  doi     = {10.1109/ACCESS.2025.3642613},
   url     = {https://ieeexplore.ieee.org/document/11293818}
 }
 ```

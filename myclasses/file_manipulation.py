@@ -57,7 +57,6 @@ class DataSetLoader:
         # Read each file and add its contents to the `self.data` dictionary.
         for file_path in file_paths:
             data_entry = self._hdf5_read(file_path)
-            print('file_path:', file_path)
 
             # Combine data_entry with existing data dictionary.
             for key, value in data_entry.items():
@@ -69,10 +68,10 @@ class DataSetLoader:
                     self.data[key] = value[np.newaxis, :]  # add new key and convert to row vector
                 else:
                     self.data[key] = np.vstack((self.data[key], value))  # stack arrays vertically
-            try:
-                print(np.shape(self.data[key]))
-            except:
-                pass
+
+        n = len(file_paths)
+        shape = np.shape(self.data[key]) if self.data else ()
+        print(f'Loaded {n} files — shape: {shape}')
         return self.data
 
     @staticmethod
