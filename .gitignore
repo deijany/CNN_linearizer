@@ -1,0 +1,26 @@
+# IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter backup notebooks
+*_bk*.ipynb
+*\ copy*.ipynb
+
+# Trained model outputs (large, regenerable)
+trained_model/*.keras
+trained_model/*.h5
+trained_model/*.weights.h5
+
+# Plots (regenerable)
+plots/
+

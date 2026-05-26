@@ -1,0 +1,14 @@
+# CNN Linearizer — Python dependencies
+# Install with:  pip install -r requirements.txt
+#
+# TensorFlow (CPU):          tensorflow>=2.16
+# TensorFlow (Apple Silicon): tensorflow-macos + tensorflow-metal
+# TensorFlow (Colab):        pre-installed, no action needed
+
+tensorflow>=2.16        # or tensorflow-macos on Apple Silicon
+numpy>=1.24,<2.0        # np.int removed in 1.24; stay below 2.x for TF compat
+scipy>=1.10
+h5py>=3.8
+psutil>=5.9
+matplotlib>=3.7
+pydot>=1.4              # required by tf.keras.utils.plot_model (also needs graphviz system package)
