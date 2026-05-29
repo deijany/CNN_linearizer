@@ -12,3 +12,4 @@ h5py>=3.8
 psutil>=5.9
 matplotlib>=3.7
 pydot>=1.4              # required by tf.keras.utils.plot_model (also needs graphviz system package)
+tqdm>=4.64              # progress bars for Adam and BFGS training stages

@@ -27,17 +27,24 @@ class SystemCheck:
         self.ram_gb = self.ram_total_gib                   # threshold check uses total
 
     def _check_gpu(self):
-        """Check for GPU availability and print GPU info if available."""
+        """Check for GPU availability and print compact GPU info if available."""
         if tf.config.list_physical_devices('GPU'):
             print(f"{self.GREEN}A GPU is connected:{self.RESET}")
             try:
-                # nvidia-smi works on Linux/Colab; on macOS Metal it doesn't exist
-                gpu_info = subprocess.run(
-                    ['nvidia-smi'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-                ).stdout.decode('utf-8')
-                print(gpu_info if gpu_info.strip() else '  (nvidia-smi returned no output)')
+                result = subprocess.run(
+                    ['nvidia-smi',
+                     '--query-gpu=index,name,memory.total,temperature.gpu',
+                     '--format=csv,noheader,nounits'],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                )
+                if result.returncode == 0:
+                    for line in result.stdout.decode('utf-8').strip().split('\n'):
+                        idx, name, mem, temp = [x.strip() for x in line.split(',')]
+                        print(f'  GPU {idx}: {name}  |  {mem} MiB  |  {temp}C')
+                else:
+                    print('  (nvidia-smi returned no output)')
             except FileNotFoundError:
-                print('  (Metal/Apple GPU — nvidia-smi not available on macOS)')
+                print('  (Metal/Apple GPU -- nvidia-smi not available on macOS)')
         else:
             print(f"{self.RED}No GPU connected.{self.RESET}")
 

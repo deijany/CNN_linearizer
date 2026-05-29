@@ -43,7 +43,12 @@ def get_cpu_info() -> str:
             ["lscpu"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         if result.returncode == 0:
-            return result.stdout.decode("utf-8")
+            keep = {"Model name", "CPU(s)", "Core(s) per socket", "Thread(s) per core"}
+            lines = [
+                ln.strip() for ln in result.stdout.decode("utf-8").splitlines()
+                if any(ln.startswith(k) for k in keep)
+            ]
+            return "\n".join(lines) if lines else "(lscpu not available)"
         return "(lscpu not available)"
 
     if is_macos():

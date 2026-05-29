@@ -95,7 +95,7 @@ def compute_statistics(X, V, X_hat, Q1_bits=32, Q2_bits=32, Q3_bits=32, print_on
                                            'SNDR:', 'min:', np.round(np.min(SNDR_array_X), 2), ' mean:', np.round(np.mean(SNDR_array_X), 2), ' max:', np.round(np.max(SNDR_array_X), 2))
         print('V:', '          (', len(V), 'signals) '
                                            'SNDR:', 'min:', np.round(np.min(SNDR_array_V), 2), ' mean:', np.round(np.mean(SNDR_array_V), 2), ' max:', np.round(np.max(SNDR_array_V), 2))
-        print('X_hat_MI:', '   (', len(X_hat), 'signals) '
+        print('X_hat:', '   (', len(X_hat), 'signals) '
                                            'SNDR:', 'min:', np.round(np.min(SNDR_array_X_hat), 2), ' mean:', np.round(np.mean(SNDR_array_X_hat), 2), 'max:', np.round(np.max(SNDR_array_X_hat), 2))
     return SNDR_array_X, SNDR_array_V, SNDR_array_X_hat
 
